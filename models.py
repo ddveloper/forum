@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, create_engine
 from flask_sqlalchemy import SQLAlchemy
-import json, os
+import json, os, datetime
 
 db = SQLAlchemy()
 
@@ -8,11 +8,23 @@ db = SQLAlchemy()
 setup_db(app)
     binds a flask application and a SQLAlchemy service
 '''
-def setup_db(app):
+def setup_db(app, forTest=False):
     app.config.from_object('config')
     db.app = app
     db.init_app(app)
     db.create_all()
+    if forTest: add_dummy_data()
+
+def drop_db():
+    db.drop_all()
+
+'''
+add dummy data, for unittests
+'''
+def add_dummy_data():
+  user1 = User(email_address="test@db.com", nick_name="tester")
+  user1.insert()
+
 
 
 '''
@@ -64,23 +76,22 @@ class Project(db.Model):
   description = Column(String(500))
   category = Column(Integer)
   labels = Column(String(120))
-  favor_cnt = Column(Integer)
+  favor_cnt = Column(Integer, default=0)
   image_link = Column(String(500))
   video_link = Column(String(500))
-  datetime = Column(DateTime)
+  datetime = Column(DateTime, default=datetime.datetime.utcnow())
   user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
   comments = db.relationship('Comment', backref='projects', lazy=True)
 
   def __init__(self, name, description, category, 
                   labels, image_link, video_link,
-                  datetime, user_id):
+                  user_id):
     self.name = name
     self.description = description
     self.category = category
     self.labels = labels
     self.image_link = image_link
     self.video_link = video_link
-    self.datetime = datetime
     self.user_id = user_id
 
   def insert(self):

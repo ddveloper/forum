@@ -4,7 +4,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
-from models import setup_db, User, Project, Category, Comment
+from models import setup_db, drop_db, User, Project, Category, Comment
 
 class ForumTestCase(unittest.TestCase):
     ''' This class represents the forum-dz test case '''
@@ -13,7 +13,7 @@ class ForumTestCase(unittest.TestCase):
         ''' Define test variables and initialize app. '''
         self.app = create_app()
         self.client = self.app.test_client
-        setup_db(self.app)
+        setup_db(self.app, True)
 
         # a user profile for tests
 
@@ -37,9 +37,10 @@ class ForumTestCase(unittest.TestCase):
 
     def tearDown(self):
         ''' Executed after each test '''
-        pass
+        drop_db()
 
     def test_create_project(self):
+        ''' Test adding a new project '''
         res = self.client().post('/project/add', 
                         json=self.project_example)
         data = json.loads(res.data)
