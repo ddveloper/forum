@@ -24,7 +24,7 @@ def create_app(test_config=None):
         if not name or not description or not category \
             or not labels or not image_link or not video_link:
             abort(400, 'invalid inputs of new project')
-        print('adding ...')
+            
         try:
             project = Project(name=name, description=description,
                             category=category, labels=labels, 
@@ -43,7 +43,8 @@ def create_app(test_config=None):
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
 
-
+    # error handling code below
+    
     @app.errorhandler(400)
     def bad_request_error(error):
         return jsonify({
