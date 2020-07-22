@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, drop_db, User, Project, Category, Comment
 
+DUMMY_PROJECTS_LEN_FOR_TEST = 15
+
 class ForumTestCase(unittest.TestCase):
     ''' This class represents the forum-dz test case '''
 
@@ -13,7 +15,7 @@ class ForumTestCase(unittest.TestCase):
         ''' Define test variables and initialize app. '''
         self.app = create_app()
         self.client = self.app.test_client
-        setup_db(self.app, True)
+        setup_db(self.app, DUMMY_PROJECTS_LEN_FOR_TEST)
 
         # a project metadata for tests
         self.project_example = {
@@ -37,7 +39,7 @@ class ForumTestCase(unittest.TestCase):
         ''' Executed after each test '''
         drop_db()
 
-    def test_create_project(self):
+    def test_add_project_pass(self):
         ''' Test adding a new project '''
         # check db status before request
         project = Project.query.filter_by(
@@ -77,6 +79,30 @@ class ForumTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['messages'], 'failed to add new project')
 
+    def test_get_projects_pass(self):
+        ''' Test get projects '''
+        res = self.client().get('/projects')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['length'], DUMMY_PROJECTS_LEN_FOR_TEST)
+        self.assertEqual(len(data['projects']), DUMMY_PROJECTS_LEN_FOR_TEST)
+        for i in range(DUMMY_PROJECTS_LEN_FOR_TEST):
+            project = Project.query.filter_by(
+                name="dummy project{}".format(i)).one_or_none()
+            self.assertIsNotNone(project)
+            project.delete() # TODO: without this DB cannot be dropped
+
+    def test_500_get_projects_server_error(self):
+        ''' Test get projects '''
+        drop_db() # delete table ahead of request
+        res = self.client().get('/projects')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 500)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['messages'], 'failed to query projects')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

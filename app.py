@@ -9,6 +9,22 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
+    @app.route('/projects', methods=['GET'])
+    def query_projects():
+        ''' Query projects '''
+        try:
+            projects = Project.query.all()
+            formatted_projects = [project.format() for project in projects]
+            return jsonify({
+                'success': True,
+                'length': len(formatted_projects),
+                'projects': formatted_projects
+            })
+        except:
+            flash('An error occur when querying all projects')
+            print(sys.exc_info())
+            abort(500, 'failed to query projects')
+
     @app.route('/projects', methods=['POST'])
     def add_project():
         ''' Add a new project based on user inputs '''

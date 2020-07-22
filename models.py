@@ -8,12 +8,13 @@ db = SQLAlchemy()
 setup_db(app)
     binds a flask application and a SQLAlchemy service
 '''
-def setup_db(app, forTest=False):
+def setup_db(app, dummy_cnt=0):
     app.config.from_object('config')
     db.app = app
     db.init_app(app)
     db.create_all()
-    if forTest: add_dummy_data()
+    if dummy_cnt: 
+      add_dummy_data(dummy_cnt)
 
 def drop_db():
     db.drop_all()
@@ -21,16 +22,18 @@ def drop_db():
 '''
 add dummy data, for unittests
 '''
-def add_dummy_data():
-  user1 = User(email_address="test@db.com", nick_name="tester")
-  user1.insert()
-  project1 = Project( name="dummy project", 
-                      description="dummy description",
-                      category=2, labels="nodejs, momentjs", 
-                      image_link="http://dummy_image_link", 
-                      video_link="http://dummy_video_link", 
-                      user_id=1)
-  project1.insert()
+def add_dummy_data(dummy_cnt):
+  for i in range(dummy_cnt):
+    user = User(email_address="test{}@db.com".format(i+1), 
+                nick_name="tester")
+    user.insert()
+    project = Project( name="dummy project{}".format(i), 
+                        description="dummy description",
+                        category=i%3, labels="nodejs, momentjs", 
+                        image_link="http://dummy_image_link", 
+                        video_link="http://dummy_video_link", 
+                        user_id=i+1)
+    project.insert()
 
 
 '''
