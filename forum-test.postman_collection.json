@@ -1,0 +1,620 @@
+{
+	"info": {
+		"_postman_id": "ac44b2ee-db0d-43f6-821e-5c9390e1afb8",
+		"name": "forum-test",
+		"description": "AdminUser",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "create project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "79318ef5-fbee-478c-9cee-c0d317d00a92",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test project\",\r\n    \"description\": \"I am a project for running tests\",\r\n    \"category\": 2,\r\n    \"labels\": \"nodejs, react, auth0\",\r\n    \"image_link\": \"https://test_image_link\",\r\n    \"video_link\": \"https://test_video_link\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/projects",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects"
+							]
+						},
+						"description": "create a new project"
+					},
+					"response": []
+				},
+				{
+					"name": "view projects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1e6c5afa-a5a8-44fe-b6fb-ba61b86be673",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains projects array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.projects).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/projects",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4fcbcd77-e0c1-46eb-aa9a-32bd17935a26",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains projects array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.comments).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/comments/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comments",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5bea4db0-795f-49d6-8007-f8a318311181",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/projects/10",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjcwY0J0UmRmX2RZdS0tQVRDMjVkeCJ9.eyJpc3MiOiJodHRwczovL2Rldi1kejQudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlZTczMjdiMjlhNWJhMGI2ZjU2MDFmOSIsImF1ZCI6ImZvcnVtdXNlcnMiLCJpYXQiOjE1OTU0NTE0NzUsImV4cCI6MTU5NTUzNzg3NSwiYXpwIjoiZkM2T1dDZUxrbTZlaFNUVzZ0Q3o2ZTlPVTZvMFBRMTEiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImFkZDpjb21tZW50cyIsImRlbGV0ZTpjb21tZW50cyIsImRlbGV0ZTpwcm9qZWN0cyIsInVwZGF0ZTpwcm9qZWN0cyIsInZpZXc6cHJvamVjdHMiXX0.cRN3HlS5r95o4dCOavDKh8pwwQ0ZbPu4K_mXBGIleO9n91WYjeI0xRqSq12O43OVprh3ROKj2i-qzBIdIvxrdplL7eFACTBcVw6ESy_2n8wHbl0TTZQUAVQRjTILoFNXgmKro-0rJspfvKVEhG7NQ2JX-TFI2FmNEV21lxS8VefqfVTlGUOkjQT8RNvf2_RxTlcfL7YIl2e1EsbxOtrVRgeDm9759ho2Yu3EEvF7ZDAwf4cNToX47biEup9IxapnbWnz52yPTk9HSS4gAVpu-UKHqLMpuJx4spdVjAfuShZ_tHjEesbHA9UKkKTF0ZB-eEdMIkMqEu0sDoE9qURXRw",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e2a836ed-ff6c-4313-9d40-888a2b3d4706",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c9faf28c-d4bd-4b82-bf25-e87fd2268453",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "view projects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93351b4d-2442-4386-92cf-32f1b01e20e2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains projects array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.projects).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/projects",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4649d188-befe-4100-98ca-cf30671e0af5",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test project\",\r\n    \"description\": \"I am a project for running tests\",\r\n    \"category\": 2,\r\n    \"labels\": \"nodejs, react, auth0\",\r\n    \"image_link\": \"https://test_image_link\",\r\n    \"video_link\": \"https://test_video_link\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/projects",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects"
+							]
+						},
+						"description": "create a new project"
+					},
+					"response": []
+				},
+				{
+					"name": "view comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "32e8fb79-8eb1-4ad1-ac51-1aa957e2ac18",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains projects array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.comments).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/comments/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comments",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9c741a9e-eeb1-43c8-9a3a-3f8999d4e7c8",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/projects/8",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cb5868d7-422a-40aa-bf0e-c2619aaf4dd6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": \"your project rocks\",\r\n    \"user_id\": 4,\r\n    \"project_id\": 6\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/comments",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comments"
+							]
+						},
+						"description": "create a new project"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjcwY0J0UmRmX2RZdS0tQVRDMjVkeCJ9.eyJpc3MiOiJodHRwczovL2Rldi1kejQudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVlZmQ4ZjU5NjUyZTVhMDAxOWNlMjQ3YSIsImF1ZCI6ImZvcnVtdXNlcnMiLCJpYXQiOjE1OTU0NTE1NDAsImV4cCI6MTU5NTUzNzk0MCwiYXpwIjoiZkM2T1dDZUxrbTZlaFNUVzZ0Q3o2ZTlPVTZvMFBRMTEiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImFkZDpjb21tZW50cyIsImRlbGV0ZTpjb21tZW50cyIsInZpZXc6cHJvamVjdHMiXX0.HXnVJqA5wKDIIbVEguBq26e7LgEZGvfLJolOxGSbjpDecvqmOQBh_6___rD8zHbUZudf2eH4pjZ6XggHj5kW-9Yt9LHYfPXqcww3P1EHb0oHx4iQcKLM1I7QqWNyv8X0CNVWBYJPwkcIiC44zX1qDmKjI_wCqpReHRgg1yCdEvFuiHQJTcI31Ifmwa183PQnLomIWTl_LDNziRTa22DykyZ6lXRx6Fb1GB6vTsCMt_FvcTmR56J60HiF0WyKo0DGsw67ppuctKoKtDvIfNyRND-a13f11l_B2nLPNRxtE6eLBztDAhRaTOcL_QGw9kbgV9-GCFTag-EpZRg4znwzsg",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e786e714-7f37-4c68-ac67-3ed02a8a1fe0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d2ae8ba5-69d7-4dd2-a55a-3d256f93de53",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "public",
+			"item": [
+				{
+					"name": "create project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b159b7fc-2e88-4216-83d2-e0ccb762b483",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test project\",\r\n    \"description\": \"I am a project for running tests\",\r\n    \"category\": 2,\r\n    \"labels\": \"nodejs, react, auth0\",\r\n    \"image_link\": \"https://test_image_link\",\r\n    \"video_link\": \"https://test_video_link\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/projects",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects"
+							]
+						},
+						"description": "create a new project"
+					},
+					"response": []
+				},
+				{
+					"name": "view projects",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "50908787-1db6-4f74-8451-98073b0808b6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains projects array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.projects).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/projects",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "941bd204-ff42-4c4d-86ab-13080a11774c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"value contains projects array\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.comments).to.be.an('array')\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/comments/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comments",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7c04f7f5-0eaa-4097-b8bb-5564fe884278",
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": \"your project rocks\",\r\n    \"user_id\": 4,\r\n    \"project_id\": 6\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/comments",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"comments"
+							]
+						},
+						"description": "create a new project"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "31ff3fbd-8aeb-4deb-9344-fbcb0ee9edaa",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "27cdf588-0fcb-43eb-9963-3bb609c4856a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "7f107af6-a8f4-486d-88d7-59957bc73e8d",
+			"key": "host",
+			"value": "https://forum-dz.herokuapp.com"
+		},
+		{
+			"id": "60d2e755-bfe7-4177-8b9a-b615827cc9b0",
+			"key": "site",
+			"value": "https://forum-dz.herokuapp.com"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
