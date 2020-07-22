@@ -8,6 +8,7 @@ from models import setup_db, drop_db, User, Project, Category, Comment
 
 DUMMY_PROJECTS_LEN_FOR_TEST = 15
 
+
 class ForumTestCase(unittest.TestCase):
     ''' This class represents the forum-dz test case '''
 
@@ -51,8 +52,8 @@ class ForumTestCase(unittest.TestCase):
             name=self.project_example['name']).one_or_none()
         self.assertIsNone(project)
         # activate the request
-        res = self.client().post('/projects', 
-                        json=self.project_example)
+        res = self.client().post('/projects',
+                                 json=self.project_example)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -60,12 +61,12 @@ class ForumTestCase(unittest.TestCase):
         project = Project.query.filter_by(
             name=self.project_example['name']).one_or_none()
         self.assertIsNotNone(project)
-        project.delete() # roll back
+        project.delete()  # roll back
 
     def test_400_add_project_invalid_inputs(self):
         ''' Test adding a new project '''
         invalid_project = self.project_example
-        del invalid_project['name'] # remove a request field
+        del invalid_project['name']  # remove a request field
         res = self.client().post('/projects', json=invalid_project)
         data = json.loads(res.data)
 
@@ -75,9 +76,9 @@ class ForumTestCase(unittest.TestCase):
 
     def test_500_add_project_server_error(self):
         ''' Test adding a new project '''
-        drop_db() # delete table ahead of request
-        res = self.client().post('/projects', 
-                        json=self.project_example)
+        drop_db()  # delete table ahead of request
+        res = self.client().post('/projects',
+                                 json=self.project_example)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 500)
@@ -94,12 +95,12 @@ class ForumTestCase(unittest.TestCase):
         self.assertEqual(data['length'], DUMMY_PROJECTS_LEN_FOR_TEST)
         self.assertEqual(len(data['projects']), DUMMY_PROJECTS_LEN_FOR_TEST)
         for i in range(DUMMY_PROJECTS_LEN_FOR_TEST):
-            self.assertEqual(data['projects'][i]['name'], 
-                            'dummy project{}'.format(i+1))
+            self.assertEqual(data['projects'][i]['name'],
+                             'dummy project{}'.format(i+1))
 
     def test_500_get_projects_server_error(self):
         ''' Test get projects '''
-        drop_db() # delete table ahead of request
+        drop_db()  # delete table ahead of request
         res = self.client().get('/projects')
         data = json.loads(res.data)
 
@@ -110,7 +111,7 @@ class ForumTestCase(unittest.TestCase):
     def test_update_project_pass(self):
         ''' Test updating an existing project '''
         patch_project = self.project_example
-        patch_project['name'] = 'dummy project4' # fake a request field
+        patch_project['name'] = 'dummy project4'  # fake a request field
         res = self.client().patch('/projects', json=patch_project)
         data = json.loads(res.data)
 
@@ -120,7 +121,7 @@ class ForumTestCase(unittest.TestCase):
     def test_500_update_project_server_error(self):
         ''' Test updating an existing project '''
         invalid_project = self.project_example
-        invalid_project['name'] = 'not exist' # fake a request field
+        invalid_project['name'] = 'not exist'  # fake a request field
         res = self.client().patch('/projects', json=invalid_project)
         data = json.loads(res.data)
 
@@ -130,7 +131,7 @@ class ForumTestCase(unittest.TestCase):
 
     def test_delete_project_pass(self):
         ''' Test delete an existing project '''
-        project_id = 10 # project to delete
+        project_id = 10  # project to delete
         res = self.client().delete('/projects/{}'.format(project_id))
         data = json.loads(res.data)
 
@@ -139,7 +140,7 @@ class ForumTestCase(unittest.TestCase):
 
     def test_500_delete_project_wrong_id(self):
         ''' Test delete an existing project '''
-        project_id = 22 # project to delete
+        project_id = 22  # project to delete
         res = self.client().delete('/projects/{}'.format(project_id))
         data = json.loads(res.data)
 
@@ -154,8 +155,8 @@ class ForumTestCase(unittest.TestCase):
             comments=self.comment_example['comments']).one_or_none()
         self.assertIsNone(comment)
         # activate the request
-        res = self.client().post('/comments', 
-                        json=self.comment_example)
+        res = self.client().post('/comments',
+                                 json=self.comment_example)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -163,12 +164,12 @@ class ForumTestCase(unittest.TestCase):
         comment = Comment.query.filter_by(
             comments=self.comment_example['comments']).one_or_none()
         self.assertIsNotNone(comment)
-        comment.delete() # roll back
+        comment.delete()  # roll back
 
     def test_400_add_comment_invalid_inputs(self):
         ''' Test adding a new comment '''
         invalid_comment = self.comment_example
-        del invalid_comment['project_id'] # remove a request field
+        del invalid_comment['project_id']  # remove a request field
         res = self.client().post('/comments', json=invalid_comment)
         data = json.loads(res.data)
 
@@ -178,9 +179,9 @@ class ForumTestCase(unittest.TestCase):
 
     def test_500_add_comment_server_error(self):
         ''' Test adding a new comment '''
-        drop_db() # delete table ahead of request
-        res = self.client().post('/comments', 
-                        json=self.comment_example)
+        drop_db()  # delete table ahead of request
+        res = self.client().post('/comments',
+                                 json=self.comment_example)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 500)
@@ -201,7 +202,7 @@ class ForumTestCase(unittest.TestCase):
 
     def test_500_get_comments_server_error(self):
         ''' Test get comments '''
-        drop_db() # delete table ahead of request
+        drop_db()  # delete table ahead of request
         project_id = 10
         res = self.client().get('/comments/{}'.format(project_id))
         data = json.loads(res.data)
