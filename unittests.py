@@ -128,6 +128,25 @@ class ForumTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['messages'], 'failed to add update project')
 
+    def test_delete_project_pass(self):
+        ''' Test delete an existing project '''
+        project_id = 10 # project to delete
+        res = self.client().delete('/projects/{}'.format(project_id))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    def test_500_delete_project_wrong_id(self):
+        ''' Test delete an existing project '''
+        project_id = 22 # project to delete
+        res = self.client().delete('/projects/{}'.format(project_id))
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 500)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['messages'], 'failed to delete project')
+
     def test_add_comment_pass(self):
         ''' Test adding a new comment '''
         # check db status before request

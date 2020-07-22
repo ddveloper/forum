@@ -65,6 +65,26 @@ def create_app(test_config=None):
             # print(sys.exc_info())
             abort(500, 'failed to add {} project'.format('new' if to_create else 'update'))
 
+    @app.route('/projects/<int:project_id>', methods=['DELETE'])
+    def delete_projects(project_id):
+        ''' Delete project based on its id '''
+        try:
+            project = Project.query.filter_by(id=project_id).one_or_none()
+            # delete projects' comments first to avoid key error
+            comments = Comment.query.filter_by(project_id=project_id).all()
+            for comment in comments:
+                comment.delete()
+            # delete project itself
+            project.delete()
+                
+            return jsonify({
+                'success': True
+            })
+        except:
+            flash('An error occur when deleting project {}'.format(project_id))
+            # print(sys.exc_info())
+            abort(500, 'failed to delete project')
+
     @app.route('/comments/<int:project_id>', methods=['GET'])
     def query_comments(project_id):
         ''' Query comments based on project ID'''
