@@ -27,13 +27,17 @@ def add_dummy_data(dummy_cnt):
     user = User(email_address="test{}@db.com".format(i+1), 
                 nick_name="tester")
     user.insert()
-    project = Project( name="dummy project{}".format(i), 
+    project = Project( name="dummy project{}".format(i+1), 
                         description="dummy description",
                         category=i%3, labels="nodejs, momentjs", 
                         image_link="http://dummy_image_link", 
                         video_link="http://dummy_video_link", 
                         user_id=i+1)
     project.insert()
+  for i in range(dummy_cnt):
+    comment = Comment("your project is good {}".format(i),
+                        user_id=dummy_cnt-i, project_id=i+1)
+    comment.insert()
 
 
 '''
@@ -137,13 +141,12 @@ class Comment(db.Model):
 
   id = Column(Integer, primary_key=True)
   comments = Column(String(500))
-  datetime = Column(DateTime)
+  datetime = Column(DateTime, default=datetime.datetime.utcnow())
   user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
   project_id = Column(Integer, ForeignKey('Project.id'), nullable=False)
 
-  def __init__(self, comments, datetime, user_id, project_id):
+  def __init__(self, comments, user_id, project_id):
     self.comments = comments
-    self.datetime = datetime
     self.user_id = user_id
     self.project_id = project_id
 

@@ -22,7 +22,7 @@ def create_app(test_config=None):
             })
         except:
             flash('An error occur when querying all projects')
-            print(sys.exc_info())
+            # print(sys.exc_info())
             abort(500, 'failed to query projects')
 
     @app.route('/projects', methods=['POST'])
@@ -52,8 +52,50 @@ def create_app(test_config=None):
             })
         except:
             flash('An error occur when adding new project')
-            print(sys.exc_info())
+            # print(sys.exc_info())
             abort(500, 'failed to add new project')
+
+    @app.route('/comments/<int:project_id>', methods=['GET'])
+    def query_comments(project_id):
+        ''' Query comments based on project ID'''
+        try:
+            project = Project.query.filter_by(id=project_id).one_or_none()
+            if not project:
+                abort(400, 'invalid inputs of project_id')
+            comments = Comment.query.filter_by(id=project_id).all()
+            formatted_comments = [comment.format() for comment in comments]
+            return jsonify({
+                'success': True,
+                'length': len(formatted_comments),
+                'comments': formatted_comments
+            })
+        except:
+            flash('An error occur when querying comments for project {}'.format(project_id))
+            # print(sys.exc_info())
+            abort(500, 'failed to query comments')
+
+    @app.route('/comments', methods=['POST'])
+    def add_comment():
+        ''' Add a new comment based on user inputs '''
+        body = request.get_json()
+        comments = body.get('comments', None)
+        project_id = body.get('project_id', None)
+        user_id = 1 # TODO get user_id from Auth info.
+        
+        if not comments or not project_id or not user_id:
+            abort(400, 'invalid inputs of new comment')
+            
+        try:
+            comment = Comment(comments=comments,
+                            project_id=project_id, user_id=user_id)
+            comment.insert()
+            return jsonify({
+                'success': True,
+            })
+        except:
+            flash('An error occur when adding new comment')
+            # print(sys.exc_info())
+            abort(500, 'failed to add new comment')
 
     @app.route('/coolkids')
     def be_cool():
