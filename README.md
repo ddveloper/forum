@@ -115,7 +115,6 @@ POST '/projects'
     "success":true
   }
 ```
-```
 POST '/comments'
 - Create a new comment
 - Request Arguments: JSON input with comments, project_id and user_id.
