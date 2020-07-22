@@ -15,8 +15,6 @@ class ForumTestCase(unittest.TestCase):
         self.client = self.app.test_client
         setup_db(self.app, True)
 
-        # a user profile for tests
-
         # a project metadata for tests
         self.project_example = {
             'name': "test project",
@@ -41,7 +39,7 @@ class ForumTestCase(unittest.TestCase):
 
     def test_create_project(self):
         ''' Test adding a new project '''
-        res = self.client().post('/project/add', 
+        res = self.client().post('/projects', 
                         json=self.project_example)
         data = json.loads(res.data)
 

@@ -9,7 +9,7 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
-    @app.route('/project/add', methods=['POST'])
+    @app.route('/projects', methods=['POST'])
     def add_project():
         ''' Add a new project based on user inputs '''
         body = request.get_json()

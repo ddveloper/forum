@@ -24,7 +24,13 @@ add dummy data, for unittests
 def add_dummy_data():
   user1 = User(email_address="test@db.com", nick_name="tester")
   user1.insert()
-
+  project1 = Project( name="dummy project", 
+                      description="dummy description",
+                      category=2, labels="nodejs, momentjs", 
+                      image_link="http://dummy_image_link", 
+                      video_link="http://dummy_video_link", 
+                      user_id=1)
+  project1.insert()
 
 
 '''
