@@ -25,9 +25,10 @@ def create_app(test_config=None):
             # print(sys.exc_info())
             abort(500, 'failed to query projects')
 
-    @app.route('/projects', methods=['POST'])
+    @app.route('/projects', methods=['POST', 'PATCH'])
     def add_project():
-        ''' Add a new project based on user inputs '''
+        ''' Add/update a new/existing project based on user inputs '''
+        to_create = request.method == 'POST'
         body = request.get_json()
         name = body.get('name', None)
         description = body.get('description', None)
@@ -39,21 +40,30 @@ def create_app(test_config=None):
         
         if not name or not description or not category \
             or not labels or not image_link or not video_link:
-            abort(400, 'invalid inputs of new project')
+            abort(400, 'invalid inputs of {} project'.format('new' if to_create else 'update'))
             
         try:
-            project = Project(name=name, description=description,
-                            category=category, labels=labels, 
-                            image_link=image_link, video_link=video_link,
-                            user_id=user_id)
-            project.insert()
+            if to_create:
+                project = Project(name=name, description=description,
+                                category=category, labels=labels, 
+                                image_link=image_link, video_link=video_link,
+                                user_id=user_id)
+                project.insert()
+            else: # to update
+                project = Project.query.filter_by(name=name).one_or_none()
+                project.description = description
+                project.category = category
+                project.labels = labels
+                project.image_link = image_link
+                project.video_link = video_link
+                project.update()
             return jsonify({
                 'success': True,
             })
         except:
-            flash('An error occur when adding new project')
+            flash('An error occur when adding {} project'.format('new' if to_create else 'update'))
             # print(sys.exc_info())
-            abort(500, 'failed to add new project')
+            abort(500, 'failed to add {} project'.format('new' if to_create else 'update'))
 
     @app.route('/comments/<int:project_id>', methods=['GET'])
     def query_comments(project_id):

@@ -107,6 +107,27 @@ class ForumTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['messages'], 'failed to query projects')
 
+    def test_update_project_pass(self):
+        ''' Test updating an existing project '''
+        patch_project = self.project_example
+        patch_project['name'] = 'dummy project4' # fake a request field
+        res = self.client().patch('/projects', json=patch_project)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    def test_500_update_project_server_error(self):
+        ''' Test updating an existing project '''
+        invalid_project = self.project_example
+        invalid_project['name'] = 'not exist' # fake a request field
+        res = self.client().patch('/projects', json=invalid_project)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 500)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['messages'], 'failed to add update project')
+
     def test_add_comment_pass(self):
         ''' Test adding a new comment '''
         # check db status before request
