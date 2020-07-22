@@ -2,11 +2,12 @@ import os, sys
 from flask import Flask, request, abort, jsonify, flash
 from models import setup_db, User, Project, Category, Comment
 from flask_cors import CORS
+from auth import AuthError, requires_auth
 
 def create_app(test_config=None):
 
     app = Flask(__name__)
-    setup_db(app)
+    setup_db(app, 15)
     CORS(app)
 
     @app.route('/projects', methods=['GET'])
@@ -26,7 +27,8 @@ def create_app(test_config=None):
             abort(500, 'failed to query projects')
 
     @app.route('/projects', methods=['POST', 'PATCH'])
-    def add_project():
+    @requires_auth('update:projects')
+    def add_project(payload):
         ''' Add/update a new/existing project based on user inputs '''
         to_create = request.method == 'POST'
         body = request.get_json()
@@ -66,7 +68,8 @@ def create_app(test_config=None):
             abort(500, 'failed to add {} project'.format('new' if to_create else 'update'))
 
     @app.route('/projects/<int:project_id>', methods=['DELETE'])
-    def delete_projects(project_id):
+    @requires_auth('delete:projects')
+    def delete_projects(payload, project_id):
         ''' Delete project based on its id '''
         try:
             project = Project.query.filter_by(id=project_id).one_or_none()
@@ -105,7 +108,8 @@ def create_app(test_config=None):
             abort(500, 'failed to query comments')
 
     @app.route('/comments', methods=['POST'])
-    def add_comment():
+    @requires_auth('add:comments')
+    def add_comment(payload):
         ''' Add a new comment based on user inputs '''
         body = request.get_json()
         comments = body.get('comments', None)
@@ -126,10 +130,6 @@ def create_app(test_config=None):
             flash('An error occur when adding new comment')
             # print(sys.exc_info())
             abort(500, 'failed to add new comment')
-
-    @app.route('/coolkids')
-    def be_cool():
-        return "Be cool, man, be coooool! You're almost a FSND grad!"
 
     # error handling code below
     
